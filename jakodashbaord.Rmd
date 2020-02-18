@@ -43,17 +43,17 @@ Row {data-width=650}
 ### Genomsnittlig kommunalskattesats riket
 
 ```{r}
-avgnewhire=round(mean(df$municip_tax_rate),2)
+kskatt=round(mean(df$municip_tax_rate),2)
 
-valueBox(avgnewhire,icon = "fa-percent",caption = "Genomsnittlig kommunalskattesats riket",color = "lightblue")
+valueBox(kskatt,icon = "fa-percent",caption = "Genomsnittlig kommunalskattesats riket",color = "lightblue")
 
 ```
 
 ### Största kommuner
 
 ```{r}
-exits=df %>% filter(population > 100000) %>% nrow()
-valueBox(value = exits,icon = "fa-users",caption = "Antal kommuner med mer än 100 000 invånare", color = "grey")
+biggest=df %>% filter(population > 100000) %>% nrow()
+valueBox(value = biggest,icon = "fa-users",caption = "Antal kommuner med mer än 100 000 invånare", color = "grey")
 ```
 
 
@@ -68,9 +68,9 @@ valueBox(value = best,icon = "fa-arrow-down",caption = "Genomsnittlig kommunalsk
 ### Andel av populationen i åldern 0-14
 
 ```{r}
-rate = round((sum(df$pop_0_14))/(sum(df$population)),2)*100
+andel = round((sum(df$pop_0_14))/(sum(df$population)),2)*100
 
-gauge(rate, min = 0, max = 100, symbol = '%', gaugeSectors(
+gauge(andel, min = 0, max = 100, symbol = '%', gaugeSectors(
   success = c(80, 100), warning = c(40, 79), danger = c(0, 39)
 ))
 ```
@@ -94,17 +94,17 @@ p <- df %>%
   mutate(population=round(population,0)) %>%
   mutate(municip_tax_rate=round(municip_tax_rate,1)) %>%
 
-  # Reorder countries to having big bubbles on top
+  # Arrangera städer efter största population
   arrange(desc(population)) %>%
   mutate(municipality = factor(municipality, municipality)) %>%
   
-  # prepare text for tooltip
+  # Förbered text för tooltip
   mutate(text = paste("Kommun: ", municipality, 
                       "\nPopulation: ", population, 
                       "\nKommunalskattesats: ", municip_tax_rate, 
                       "\nInkomst per capita: ", income_per_cap, sep="")) %>%
   
-  # Classic ggplot
+  # Standard ggplot
   ggplot( aes(x=income_per_cap, y=municip_tax_rate, size = population, color = ruling_coalition, text=text)) +
   geom_point(alpha=0.7) +
   scale_size(range = c(1.4, 19), name="Block") +
@@ -112,7 +112,7 @@ p <- df %>%
   theme_ipsum() +
   theme(legend.position="right")
 
-# turn ggplot interactive with plotly
+# Gör ggplot interaktiv med plotly
 pp <- ggplotly(p, tooltip="text")
 pp
 
@@ -126,8 +126,8 @@ Row {data-height=250}
 
 ### Antal kommuner med lägst kommunalskattesats
 ```{r}
-newhires=df %>% filter(municip_tax_rate < 20) %>% nrow()
-valueBox(value = newhires,icon = "fa-percent",caption = "Antal kommuner med lägst kommunalskattesats",color = "lightgreen")
+lskatt=df %>% filter(municip_tax_rate < 20) %>% nrow()
+valueBox(value = lskatt,icon = "fa-percent",caption = "Antal kommuner med lägst kommunalskattesats",color = "lightgreen")
 
 ```
 
